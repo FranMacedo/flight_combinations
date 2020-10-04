@@ -1,12 +1,7 @@
 # FLIGHT COMBINATIONS :airplane:
-<<<<<<< HEAD
 
 - Find all the possible combinations of flights with different bags allowed per passenger. 
 - Use the simple flask application to visualize this information.
-=======
-<!-- FALTA REQUIREMENTS.TXT, GITIGNORE -->
-Find all the possible combinations of flights with different bags allowed per passenger.
->>>>>>> 6ae6bf71e978bf7b577b124b930fb1b8786920fa
 
 <br />
 
