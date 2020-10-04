@@ -1,6 +1,7 @@
-# FLIGHT COMBINATIONS
-<!-- FALTA REQUIREMENTS.TXT, GITIGNORE -->
-Find all the possible combinations of flights with different bags allowed per passenger.
+# FLIGHT COMBINATIONS :airplane:
+
+- Find all the possible combinations of flights with different bags allowed per passenger. 
+- Use the simple flask application to visualize this information.
 
 <br />
 
@@ -71,19 +72,20 @@ The expected outupt is a nested dictionary where the "parent keys" correspond to
     }
 ```
 Each trip has the following information:
-```python
- trip = {
-    'number_of_bags': int - 'number of bags this passenger wants to carry',
-    'source': str - 'source airport code',
-    'destination': str - 'destination airport code',
-    'flights': list - 'all flights details that are included in this trip',
-    'total_price': float - 'total price of the trip, including bags prices',
-    'flight_time': float - 'total time in the air', 
-    'transfer_time': float - 'total time in transfers',
-    'number_of_transfers': int - 'number of transfers for this trip',
-}
 
-```
+
+| key            | type  | value |
+| :-------------:|:-----:|:-----:|
+| number_of_bags | `int` | number of bags this passenger wants to carry |
+| source      | `str` | source airport code |
+| destination      | `str` | destination airport code |
+| flights      | `list` | all flights details that are included in this trip |
+| total_price      | `float` | total price of the trip, including bags prices |
+| flight_time      | `float` | total time in the air |
+| transfer_time      | `float` | total time in transfers |
+| number_of_transfers      | `int` | number of transfers for this trip |
+
+
 
 <br />
 
