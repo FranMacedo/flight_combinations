@@ -1,4 +1,4 @@
-# FLIGHT COMBINATIONS
+# FLIGHT COMBINATIONS :airplane:
 <!-- FALTA REQUIREMENTS.TXT, GITIGNORE -->
 Find all the possible combinations of flights with different bags allowed per passenger.
 
