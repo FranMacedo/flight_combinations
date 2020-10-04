@@ -41,6 +41,7 @@ def combinations(df_main, df_search):
 	all_trips = pd.Series(dtype='object')
 	for i, flight_start in df_search.iterrows():
 		
+		# First possible trip will be just this starter flight		
 		all_trips.loc[len(all_trips)] = [flight_start.flight_number] 
 
 		# Find all possible next flights		
@@ -58,7 +59,7 @@ def combinations(df_main, df_search):
 			# Only search for following/next flights, if we are NOT back at our starting point
 			df_next = df_next.loc[df_next.destination != flight_start.source]
 			
-			# Loop through our next flights and search recursivly for possible following trips,
+			# Loop through our next flights and search recursivly for possible following trips
 			for i_next, flight_next in df_next.iterrows():
 				# get all following trips
 				trips_next = combinations(df_main, df_next.loc[[i_next]])
@@ -81,29 +82,30 @@ def clean_data(trips, df_main, nr_bags):
 	list: list of dictionaries. each dictionary contains information regarding one specific trip and it's details. 
 
 	"""
+
+	# final cleaned trips will be stored here
 	trips_cleaned = []
 	for trip in trips:
+
+		# find details of the flights of this trip
 		df_trip = df_main.loc[df_main.flight_number.isin(trip)]
 		df_trip = df_trip.sort_values(by='departure')
+		
+		# find all flights duration and all transfers duration
 		time_diff = (df_trip.arrival - df_trip.departure)/np.timedelta64(1,'m')
-
-		if any(time_diff <0):
-			print(f'\n\nHEEEER! {trip}\n\n')
-
 		transfer_time_diff = (df_trip.departure[1:] - df_trip.arrival.shift(1)[1:])/np.timedelta64(1,'m')
 		
-		if any(transfer_time_diff <0):
-			print(f'\n\nHEEEER 22222! {trip}\n\n')
-
+		# date columns in string format, so they can possibly be json serializable in the future
 		df_trip.arrival = df_trip.arrival.dt.strftime('%Y-%m-%d %H:%M')
 		df_trip.departure = df_trip.departure.dt.strftime('%Y-%m-%d %H:%M')
 
+		# append his trip to our main trips lists
 		trips_cleaned.append({
 			'number_of_bags': int(nr_bags),
 			'source': df_trip.iloc[0].source,
 			'destination': df_trip.iloc[-1].destination,
 			'flights': [flight.to_dict() for i,flight in df_trip.iterrows()],
-			'total_price': float(df_trip.price.sum() + nr_bags*df_trip.bag_price.sum()),
+			'total_price': float(df_trip.price.sum() + nr_bags*df_trip.bag_price.sum()), # total price should include bags prices
 			'flight_time': float(time_diff.sum()), 
 			'transfer_time': float(transfer_time_diff.sum()),
 			'number_of_transfers': int(len(df_trip)-1),
@@ -111,7 +113,7 @@ def clean_data(trips, df_main, nr_bags):
 	return trips_cleaned
 
 
-def main(df=pd.DataFrame(), passenger_bags=[0,1,2,3,4,5,6,7,8]):
+def main(df=pd.DataFrame(), passenger_bags=[0,1,2]):
 	""" Creates dictionary of possible trips given flights data and number(s) of bags the passanger want's to carry.
 
 	Parameters:
@@ -126,7 +128,7 @@ def main(df=pd.DataFrame(), passenger_bags=[0,1,2,3,4,5,6,7,8]):
 	if df.empty:
 		df = pd.read_csv('input.csv') # default name of input file
 
-	# Separate columns necessary to check all the possible flights combinations.
+	# columns necessary to check all the possible flights combinations.
 	cols_for_combinations = ['source', 'destination', 'departure', 'arrival', 'flight_number']	
 
 	# Proper datetime format
