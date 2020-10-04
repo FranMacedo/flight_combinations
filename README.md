@@ -104,3 +104,5 @@ Windows:
     ```
     py app.py                   
     ```
+
+Open http://127.0.0.1:5000/ on your browser and enjoy :wink:

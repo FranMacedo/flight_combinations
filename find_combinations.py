@@ -111,7 +111,7 @@ def clean_data(trips, df_main, nr_bags):
 	return trips_cleaned
 
 
-def main(df=pd.DataFrame(), passenger_bags=[0,1,2]):
+def main(df=pd.DataFrame(), passenger_bags=[0,1,2,3,4,5,6,7,8]):
 	""" Creates dictionary of possible trips given flights data and number(s) of bags the passanger want's to carry.
 
 	Parameters:

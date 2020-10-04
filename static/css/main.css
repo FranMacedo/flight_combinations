@@ -3,7 +3,6 @@ body {
 }
 
 .my-container{
-    /* margin-top: 2%; */
     width: 80%;
     margin: 3% auto;
     display: block;
@@ -15,7 +14,6 @@ body {
     text-align: center;
 }
 
-
 .info-alert{
     background-color: #dddada73;
 }
@@ -25,21 +23,3 @@ body {
 .warning-alert{
     background-color: #ffe292;
 }
-/* 
-.container{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-
-}
-.card{
-    background-color: red;
-    background-color: #cfcfcf;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin: 0.2rem;
-    padding: 0.2rem;
-
-} */

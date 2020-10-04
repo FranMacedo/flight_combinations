@@ -12,19 +12,30 @@
 </head>
 <body>
     <div class="fixed-action-btn">
-        <a class="btn-floating btn-large blue lighten-2" href="/getDataJSON">
+        <a class="btn-floating btn-large teal lighten-2 tooltipped" data-position="left" data-tooltip="Download data" href="/getDataJSON">
           <i class="large material-icons">get_app</i>
         </a>
     </div>
 
     <div class="my-container">
 
-            <div id="bag-selector" class="row">           
-                Select number of bags:     
+            <div id="bag-selector" class="row">  
+                <div class="col s12 m2 center-align">
+                    Select number of bags
+
+                </div>         
+                <div class="col s12 m10">
+
                     {% for bags in number_of_bags %}
-                        <button class="waves-effect waves-light btn blue lighten-2" id="btn-{{ bags }}">{{ bags }} bag(s)</button>
+                        <!-- <button class="waves-effect waves-light btn blue lighten-2" id="btn-{{ bags }}">{{ bags }} bag(s)</button> -->
+                        <label class="col s6 m3">
+                            <input name="group1" id="btn-{{ bags }}" type="radio" />
+                            <span>{{ bags }} bags</span>
+                        </label>
                     {% endfor %}
-            </div>
+                </div>         
+
+                </div>
 
         <div class="alert warning-alert" id="select-bags-alert">
             Select number of bags
@@ -40,7 +51,7 @@
 
                     {% else %}
                         <div class="center-align col s12 alert info-alert">
-                            <h5> Trips available for passengers with <span style="color: #6b71c6">{{ bags }}</span> bags</h5>
+                            <h5> Trips available for passengers with <span style="color: #26a69a">{{ bags }}</span> bags</h5>
                         </div>
                         <div class="row">
                         
@@ -50,29 +61,29 @@
                                 <div class="card card blue-grey lighten-5">
                                     <div class="card-content black-text">
                                         <div class="row valign-wrapper">
-                                            <div class="col m3">
+                                            <div class="col s3 center-align">
                                                 <h6>{{ trip.source }}</h6>
                                                 <i class="material-icons">flight_takeoff</i>
                                             </div>
-                                            <div class="col m6">
+                                            <div class="col s6 center-align">
                                                 <hr>
                                             </div>
-                                            <div class="col m3">
+                                            <div class="col s3 center-align">
                                                 <h6>{{ trip.destination }}</h6>
                                                 <i class="material-icons">flight_land</i>
                                             </div>
                                         </div>
                                         <div class="row center-align">
-                                            <div class="col m6">
+                                            <div class="col s6">
                                             {{ trip.number_of_transfers }} transfers
                                             </div>
-                                            <div class="col m6">                                        
+                                            <div class="col s6">                                        
                                             {{ (trip.flight_time + trip.transfer_time)|round|int }} minutes
                                             </div>
 
                                         </div>
                                         
-                                        <span class="card-title activator grey-text text-darken-4">{{ trip.total_price }}€<i class="material-icons right">more_vert</i></span>
+                                        <span class="card-title activator grey-text text-darken-4">{{ trip.total_price }}€<i class="material-icons right tooltipped" data-position="left" data-tooltip="details">more_vert</i></span>
 
                                      
                                    
@@ -80,16 +91,13 @@
                                     
                                     <div class="card-reveal">
                                         <span class="card-title grey-text text-darken-4">Details<i class="material-icons right">close</i></span>
-                                            
                                         <table class="highlight centered">
-                                         
-
                                             <tbody>
                                                 <thead>
                                                     <tr>
                                                         <th>From</th>
                                                         <th>To</th>
-                                                        <th>price</th>
+                                                        <th>Price</th>
                                                         
                                                     </tr>
                                                 </thead>
@@ -98,15 +106,12 @@
                                                         <td>{{ flight.source }} <br>{{ flight.departure }}</td>
                                                         <td>{{ flight.destination }} <br>{{ flight.arrival }}</td>
                                                         <td>{{ (flight.price + flight.bag_price*bags)|round|int}} €</td>
-
                                                     </tr>
                                                 {% endfor %}
-
                                             </tbody>
                                         </table>       
                                     </div>
                                 </div>
-                                
                             </div>
                             {% endfor %}
                         </div>
@@ -119,33 +124,35 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
     <script>
-          M.AutoInit();
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.tooltipped');
+            var instances = M.Tooltip.init(elems, {});
+        });
 
-        const bagSelector  = document.getElementById('bag-selector');
-        bagSelector.addEventListener('click', event => {
-            const isButton = event.target.nodeName === 'BUTTON';
-            if (!isButton){
+        const bagSelector  = document.getElementById('bag-selector'); // number of bags selector
+        bagSelector.addEventListener('click', event => { // when a number of bags is selected in the radio buttons
+            const isInput = event.target.nodeName === 'INPUT';
+
+            if (!isInput){  
+                // if its clicked inside the bag-selector container, but is not input, do nothing
                 return
             }
-
-            const nrBags = event.target.id.split('-')[1]
+                      
+            const nrBags = event.target.id.split('-')[1] // number of bags
             
-            const tripsDisplay  = document.getElementById('trips-display');
-            const allTripsDisplay = tripsDisplay.getElementsByClassName('tripsPerBag');
-            const allTripsDisplayArr = Array.from(allTripsDisplay)
-            allTripsDisplayArr.forEach(function(tripBag){
-                if (tripBag.id === `trips-${nrBags}`){
-                    if (tripBag.style.display === "none"){
-                        tripBag.style.display = "block";
-                        document.getElementById('select-bags-alert').style.display = 'none';
-                    }
-                    else{
-                        tripBag.style.display = 'none'
-                        document.getElementById('select-bags-alert').style.display = 'block';
-                    }     
+            const tripsDisplay  = document.getElementById('trips-display'); // container of all the trips 
+            const allTripsDisplay = tripsDisplay.getElementsByClassName('tripsPerBag'); // all containers of each bag-trips set  
+            const allTripsDisplayArr = Array.from(allTripsDisplay) // same as before, but in array, so it can be easy to loop through
+            
+            allTripsDisplayArr.forEach(function(tripBag){ // loop through array of containers of each bag-trip set
+                if (tripBag.id === `trips-${nrBags}`){ // is this bag display container the one corresponding to the selected radio button
+                        if (tripBag.style.display === "none"){ // if is not showing, show
+                            tripBag.style.display = "block";
+                            document.getElementById('select-bags-alert').style.display = 'none'; // hide alert
+                        }
                 }
                 else{
-                    tripBag.style.display = 'none'
+                    tripBag.style.display = 'none' // hide all the other trip-bag containers that were not selected
                 }
             })
         })
