@@ -9,8 +9,8 @@ Find all the possible combinations of flights with different bags allowed per pa
 Run the following commands to setup environment:
 
 ``` 
-git clone <name>
-cd <name>
+git clone https://github.com/FranMacedo/flight_combinations.git
+cd flight_combinations
 python -m venv venv
 .\venv\scripts\activate
 pip install -r requirements.txt
