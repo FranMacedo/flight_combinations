@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="../static/css/main.css" rel="stylesheet" type="text/css" />
+
+
+    <title>Flights</title>
+</head>
+<body>
+    <div class="fixed-action-btn">
+        <a class="btn-floating btn-large blue lighten-2" href="/getDataJSON">
+          <i class="large material-icons">get_app</i>
+        </a>
+    </div>
+
+    <div class="my-container">
+
+            <div id="bag-selector" class="row">           
+                Select number of bags:     
+                    {% for bags in number_of_bags %}
+                        <button class="waves-effect waves-light btn blue lighten-2" id="btn-{{ bags }}">{{ bags }} bag(s)</button>
+                    {% endfor %}
+            </div>
+
+        <div class="alert warning-alert" id="select-bags-alert">
+            Select number of bags
+        </div>
+    
+        <div id="trips-display">
+            {% for bags in number_of_bags %}
+                <div class="tripsPerBag" style="display: none" id="trips-{{ bags }}" >
+                    {% if not trips[bags] %}
+                    <div class="alert danger-alert">
+                        No trips available for passengers with {{ bags }} bags
+                    </div>
+
+                    {% else %}
+                        <div class="center-align col s12 alert info-alert">
+                            <h5> Trips available for passengers with <span style="color: #6b71c6">{{ bags }}</span> bags</h5>
+                        </div>
+                        <div class="row">
+                        
+                            {% for trip in trips[bags] %}
+                            
+                            <div class="col s12 m6 l4">
+                                <div class="card card blue-grey lighten-5">
+                                    <div class="card-content black-text">
+                                        <div class="row valign-wrapper">
+                                            <div class="col m3">
+                                                <h6>{{ trip.source }}</h6>
+                                                <i class="material-icons">flight_takeoff</i>
+                                            </div>
+                                            <div class="col m6">
+                                                <hr>
+                                            </div>
+                                            <div class="col m3">
+                                                <h6>{{ trip.destination }}</h6>
+                                                <i class="material-icons">flight_land</i>
+                                            </div>
+                                        </div>
+                                        <div class="row center-align">
+                                            <div class="col m6">
+                                            {{ trip.number_of_transfers }} transfers
+                                            </div>
+                                            <div class="col m6">                                        
+                                            {{ (trip.flight_time + trip.transfer_time)|round|int }} minutes
+                                            </div>
+
+                                        </div>
+                                        
+                                        <span class="card-title activator grey-text text-darken-4">{{ trip.total_price }}€<i class="material-icons right">more_vert</i></span>
+
+                                     
+                                   
+                                    </div>
+                                    
+                                    <div class="card-reveal">
+                                        <span class="card-title grey-text text-darken-4">Details<i class="material-icons right">close</i></span>
+                                            
+                                        <table class="highlight centered">
+                                         
+
+                                            <tbody>
+                                                <thead>
+                                                    <tr>
+                                                        <th>From</th>
+                                                        <th>To</th>
+                                                        <th>price</th>
+                                                        
+                                                    </tr>
+                                                </thead>
+                                                {% for flight in trip.flights %}
+                                                    <tr>
+                                                        <td>{{ flight.source }} <br>{{ flight.departure }}</td>
+                                                        <td>{{ flight.destination }} <br>{{ flight.arrival }}</td>
+                                                        <td>{{ (flight.price + flight.bag_price*bags)|round|int}} €</td>
+
+                                                    </tr>
+                                                {% endfor %}
+
+                                            </tbody>
+                                        </table>       
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script>
+          M.AutoInit();
+
+        const bagSelector  = document.getElementById('bag-selector');
+        bagSelector.addEventListener('click', event => {
+            const isButton = event.target.nodeName === 'BUTTON';
+            if (!isButton){
+                return
+            }
+
+            const nrBags = event.target.id.split('-')[1]
+            
+            const tripsDisplay  = document.getElementById('trips-display');
+            const allTripsDisplay = tripsDisplay.getElementsByClassName('tripsPerBag');
+            const allTripsDisplayArr = Array.from(allTripsDisplay)
+            allTripsDisplayArr.forEach(function(tripBag){
+                if (tripBag.id === `trips-${nrBags}`){
+                    if (tripBag.style.display === "none"){
+                        tripBag.style.display = "block";
+                        document.getElementById('select-bags-alert').style.display = 'none';
+                    }
+                    else{
+                        tripBag.style.display = 'none'
+                        document.getElementById('select-bags-alert').style.display = 'block';
+                    }     
+                }
+                else{
+                    tripBag.style.display = 'none'
+                }
+            })
+        })
+    </script>
+</body>
+</html>
